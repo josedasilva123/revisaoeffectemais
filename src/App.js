@@ -28,6 +28,15 @@ function App() {
     getPokemon();
   }, []);  
 
+  //Efeito de carregamento localStorage
+  useEffect(() => {
+    const localTeam = localStorage.getItem('@POKEMON');
+    if(localTeam){
+      const parsedTeam = JSON.parse(localTeam);
+      setPokemonTeam(parsedTeam);
+    }
+  }, [])
+
   //Adicionando um pokemon a um time (do estado pokemonList para o estado pokemonTeam)
   function addPokemon(currentPokemon) {
     //Validando se o pokémon já está adicionado no time
@@ -38,13 +47,16 @@ function App() {
       alert("O time já está cheio!");
     } else {
       //Se não houverem erros o pokémon é adicionado ao estado
-      setPokemonTeam([...pokemonTeam, currentPokemon]);      
+      const newTeam = [...pokemonTeam, currentPokemon]
+      localStorage.setItem('@POKEMON', JSON.stringify(newTeam));
+      setPokemonTeam(newTeam); //Adicinando newList a localStorage     
     }
   }
 
   function removePokemon(currentPokemon) {
     //Filtro que retorna todos os pokemons menos o selecionado (removação)
     const newList = pokemonTeam.filter((pokemon) => pokemon !== currentPokemon);
+    localStorage.setItem('@POKEMON', JSON.stringify(newList)); //Adicinando newList a localStorage
     setPokemonTeam(newList);
   }
 
